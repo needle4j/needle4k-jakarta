@@ -65,6 +65,87 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.3.0</version>
+
+                <executions>
+                    <execution>
+                        <id>Unpack needle4k sources</id>
+                        <phase>initialize</phase>
+
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <!-- Contains Model JSON -->
+                                    <groupId>org.needle4k</groupId>
+                                    <artifactId>needle4k</artifactId>
+                                    <classifier>sources</classifier>
+                                    <version>${project.version}</version>
+
+                                    <overWrite>true</overWrite>
+                                </artifactItem>
+                            </artifactItems>
+
+                            <outputDirectory>${project.build.directory}/kotlin</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+
+                <executions>
+                    <!-- Replace javax.* versions with jakarta.* -->
+                    <execution>
+                        <id>patch-sources</id>
+                        <phase>generate-sources</phase>
+
+                        <configuration>
+                            <target>
+                                <replace dir="${project.build.directory}/kotlin">
+                                    <replacefilter token="import javax.persistence." value="import jakarta.persistence."/>
+                                </replace>
+                            </target>
+                        </configuration>
+
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.3.0</version>
+
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/kotlin</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
             </plugin>
