@@ -24,7 +24,6 @@
 
         <!-- Jakarta EE, i.e. "jakarta.*" versions -->
 
-
         <dependency>
             <groupId>jakarta.inject</groupId>
             <artifactId>jakarta.inject-api</artifactId>
@@ -59,6 +58,9 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>${project.build.directory}/kotlin</sourceDirectory>
+        <testSourceDirectory>${project.build.directory}/test</testSourceDirectory>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,6 +92,31 @@
                             <outputDirectory>${project.build.directory}/kotlin</outputDirectory>
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>Unpack needle4k test sources</id>
+                        <phase>initialize</phase>
+
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <!-- Contains Model JSON -->
+                                    <groupId>org.needle4k</groupId>
+                                    <artifactId>needle4k</artifactId>
+                                    <classifier>test-sources</classifier>
+                                    <version>${project.version}</version>
+
+                                    <overWrite>true</overWrite>
+                                </artifactItem>
+                            </artifactItems>
+
+                            <outputDirectory>${project.build.directory}/test</outputDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
@@ -108,6 +135,16 @@
                             <target>
                                 <replace dir="${project.build.directory}/kotlin">
                                     <replacefilter token="import javax.persistence." value="import jakarta.persistence."/>
+                                    <replacefilter token="import javax.ejb." value="import jakarta.ejb."/>
+                                    <replacefilter token="import javax.inject." value="import jakarta.inject."/>
+                                    <replacefilter token="import javax.annotation." value="import jakarta.annotation."/>
+                                </replace>
+
+                                <replace dir="${project.build.directory}/test">
+                                    <replacefilter token="import javax.persistence." value="import jakarta.persistence."/>
+                                    <replacefilter token="import javax.ejb." value="import jakarta.ejb."/>
+                                    <replacefilter token="import javax.inject." value="import jakarta.inject."/>
+                                    <replacefilter token="import javax.annotation." value="import jakarta.annotation."/>
                                 </replace>
                             </target>
                         </configuration>
@@ -115,28 +152,6 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.3.0</version>
-
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/kotlin</source>
-                            </sources>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
