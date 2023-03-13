@@ -138,6 +138,7 @@
                                     <replacefilter token="import javax.ejb." value="import jakarta.ejb."/>
                                     <replacefilter token="import javax.inject." value="import jakarta.inject."/>
                                     <replacefilter token="import javax.annotation." value="import jakarta.annotation."/>
+                                    <replacefilter token="import javax.enterprise." value="import jakarta.enterprise."/>
                                 </replace>
 
                                 <replace dir="${project.build.directory}/test">
@@ -145,6 +146,7 @@
                                     <replacefilter token="import javax.ejb." value="import jakarta.ejb."/>
                                     <replacefilter token="import javax.inject." value="import jakarta.inject."/>
                                     <replacefilter token="import javax.annotation." value="import jakarta.annotation."/>
+                                    <replacefilter token="import javax.enterprise." value="import jakarta.enterprise."/>
                                 </replace>
                             </target>
                         </configuration>
